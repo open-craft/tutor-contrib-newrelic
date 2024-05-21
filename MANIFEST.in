@@ -1,0 +1,2 @@
+recursive-include tutornewrelic/patches *
+recursive-include tutornewrelic/templates *
