@@ -280,24 +280,8 @@ class NewRelicClient:
                     "fillOption": "STATIC",
                     "fillValue": 0,
                 },
-                "terms": [
-                    {
-                        "threshold": 1,
-                        "thresholdOccurrences": "AT_LEAST_ONCE",
-                        "thresholdDuration": 300,
-                        "operator": "BELOW",
-                        "priority": "WARNING",
-                    },
-                    {
-                        "threshold": 1,
-                        "thresholdOccurrences": "AT_LEAST_ONCE",
-                        "thresholdDuration": 600,
-                        "operator": "BELOW",
-                        "priority": "CRITICAL",
-                    },
-                ],
                 "expiration": {
-                    "expirationDuration": 120,
+                    "expirationDuration": 360,
                     "openViolationOnExpiration": True,
                 },
             },
