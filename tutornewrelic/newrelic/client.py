@@ -297,7 +297,7 @@ class NewRelicClient:
                     },
                 ],
                 "expiration": {
-                    "expirationDuration": 120,
+                    "expirationDuration": 600,
                     "openViolationOnExpiration": True,
                 },
             },
