@@ -43,7 +43,7 @@ setup(
     include_package_data=True,
     python_requires=">=3.7",
     install_requires=[
-        "tutor>=17,<19",
+        "tutor>=17,<20",
         "requests",
         "pydantic",
     ],
@@ -52,7 +52,7 @@ setup(
             "black",
             "mypy",
             "pylint",
-            "tutor[dev]>=17,<19",
+            "tutor[dev]>=17,<20",
             "types-requests",
         ]
     },
