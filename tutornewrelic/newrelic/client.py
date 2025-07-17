@@ -273,10 +273,10 @@ class NewRelicClient:
             "accountId": self.__account_id,
             "policyId": policy_id,
             "condition": {
-                "name": f"Lost signal for {monitor_name}",
+                "name": f"{monitor_name}",
                 "enabled": True,
-                "description": f"Alert when {monitor_name} is not responding",
-                "valueFunction": "SUM",
+                "description": f"Alert when {monitor_name} synthetic monitoring records FAILUREs",
+                "valueFunction": "SINGLE_VALUE",
                 "violationTimeLimitSeconds": 86400,
                 "nrql": {
                     "query": f"SELECT count(*) FROM SyntheticCheck WHERE monitorName = '{monitor_name}' AND result = 'FAILED'",
@@ -284,28 +284,21 @@ class NewRelicClient:
                 "signal": {
                     "aggregationWindow": 60,
                     "aggregationMethod": "EVENT_FLOW",
-                    "aggregationDelay": 120,
+                    "aggregationDelay": 0,
                     "fillOption": "STATIC",
                     "fillValue": 0,
                 },
                 "terms": [
                     {
-                        "threshold": 1,
+                        "threshold": 0,
                         "thresholdOccurrences": "AT_LEAST_ONCE",
                         "thresholdDuration": 360,
-                        "operator": "ABOVE",
-                        "priority": "WARNING",
-                    },
-                    {
-                        "threshold": 2,
-                        "thresholdOccurrences": "AT_LEAST_ONCE",
-                        "thresholdDuration": 660,
                         "operator": "ABOVE",
                         "priority": "CRITICAL",
                     },
                 ],
                 "expiration": {
-                    "expirationDuration": 660,
+                    "expirationDuration": 360,
                     "openViolationOnExpiration": False,
                     "closeViolationsOnExpiration": True,
                 },
