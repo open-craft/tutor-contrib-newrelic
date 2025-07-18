@@ -183,6 +183,10 @@ class NewRelicClient:
               id
               name
             }
+            errors {
+              description
+              type
+            }
           }
         }"""
 
@@ -198,6 +202,10 @@ class NewRelicClient:
         }
 
         response = self.__send_request(query, variables)
+
+        if response.get("errors"):
+            raise NerdGraphAPIError(f"Unexpected NerdGraph error: {response}")
+
         response = response["syntheticsCreateSimpleMonitor"]
 
         return SyntheticsMonitorResponse(
@@ -265,40 +273,34 @@ class NewRelicClient:
             "accountId": self.__account_id,
             "policyId": policy_id,
             "condition": {
-                "name": f"Lost signal for {monitor_name}",
+                "name": f"{monitor_name}",
                 "enabled": True,
-                "description": f"Alert when {monitor_name} is not responding",
+                "description": f"Alert when {monitor_name} synthetic monitoring records FAILUREs",
                 "valueFunction": "SINGLE_VALUE",
                 "violationTimeLimitSeconds": 86400,
                 "nrql": {
-                    "query": f"SELECT count(*) FROM SyntheticCheck WHERE monitorName = '{monitor_name}' AND result = 'SUCCESS'",
+                    "query": f"SELECT count(*) FROM SyntheticCheck WHERE monitorName = '{monitor_name}' AND result = 'FAILED'",
                 },
                 "signal": {
                     "aggregationWindow": 60,
                     "aggregationMethod": "EVENT_FLOW",
-                    "aggregationDelay": 120,
+                    "aggregationDelay": 0,
                     "fillOption": "STATIC",
                     "fillValue": 0,
                 },
                 "terms": [
                     {
-                        "threshold": 1,
+                        "threshold": 0,
                         "thresholdOccurrences": "AT_LEAST_ONCE",
-                        "thresholdDuration": 300,
-                        "operator": "BELOW",
-                        "priority": "WARNING",
-                    },
-                    {
-                        "threshold": 1,
-                        "thresholdOccurrences": "AT_LEAST_ONCE",
-                        "thresholdDuration": 600,
-                        "operator": "BELOW",
+                        "thresholdDuration": 360,
+                        "operator": "ABOVE",
                         "priority": "CRITICAL",
                     },
                 ],
                 "expiration": {
-                    "expirationDuration": 600,
-                    "openViolationOnExpiration": True,
+                    "expirationDuration": 360,
+                    "openViolationOnExpiration": False,
+                    "closeViolationsOnExpiration": True,
                 },
             },
         }
@@ -561,7 +563,7 @@ class NewRelicClient:
 
         response = self.__send_request(query, variables)
 
-        if response.get("error"):
+        if response.get("errors"):
             raise NerdGraphAPIError(f"Unexpected NerdGraph error: {response}")
 
         response = response["aiWorkflowsCreateWorkflow"]
