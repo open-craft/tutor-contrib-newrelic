@@ -217,7 +217,7 @@ class NewRelicClient:
         Get alert condition by its name.
         """
 
-        condition_name = f"Lost signal for {monitor_name}"
+        condition_name = monitor_name
 
         query = """
         query($accountId: Int!, $name: String!) {
@@ -273,7 +273,7 @@ class NewRelicClient:
             "accountId": self.__account_id,
             "policyId": policy_id,
             "condition": {
-                "name": f"{monitor_name}",
+                "name": monitor_name,
                 "enabled": True,
                 "description": f"Alert when {monitor_name} synthetic monitoring records FAILUREs",
                 "valueFunction": "SINGLE_VALUE",
