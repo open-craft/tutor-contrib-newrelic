@@ -442,7 +442,12 @@ class NewRelicClient:
               name: $name
               destinationId: $destinationId
               product: IINT
-              properties: []
+              properties: [
+                {
+                  key: "subject"
+                  value: "{{state}} - {{issueTitle}}"
+                }
+              ]
             }
           ) {
             channel {
