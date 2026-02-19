@@ -70,7 +70,7 @@ class NewRelicClient:
 
         response = json.loads(response.content)
 
-        if response.get("errors"):  # type: ignore
+        if response.get("errors"):
             raise NerdGraphAPIError(response)
 
         return response["data"]  # type: ignore
