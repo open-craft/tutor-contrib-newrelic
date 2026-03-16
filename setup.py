@@ -43,7 +43,7 @@ setup(
     include_package_data=True,
     python_requires=">=3.7",
     install_requires=[
-        "tutor>=17,<21",
+        "tutor>=17,<22",
         "requests",
         "pydantic",
     ],
@@ -52,7 +52,7 @@ setup(
             "black",
             "mypy",
             "pylint",
-            "tutor[dev]>=17,<21",
+            "tutor[dev]>=17,<22",
             "types-requests",
         ]
     },
@@ -67,9 +67,6 @@ setup(
         "License :: OSI Approved :: GNU Affero General Public License v3",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
     ],
