@@ -470,12 +470,10 @@ class NewRelicClient:
 
         return Response(id=response["channel"]["id"], name=response["channel"]["name"])
 
-    def get_ai_workflow(self, instance_name: str) -> Optional[Response]:
+    def get_ai_workflow(self, workflow_name: str) -> Optional[Response]:
         """
         Get applied intelligence workflow by its name.
         """
-
-        workflow_name = f"Alert intelligence workflow of {instance_name} instance"
 
         query = """
         query($accountId: Int!, $name: String!) {
@@ -575,3 +573,9 @@ class NewRelicClient:
             id=response["workflow"]["id"],
             name=response["workflow"]["name"],
         )
+
+    def ensure_policy_in_workflow(self, *, policy_id: str, workflow_id: str):
+        """
+        Ensure that a given workflow applies to a given policy ID.
+        """
+        pass
