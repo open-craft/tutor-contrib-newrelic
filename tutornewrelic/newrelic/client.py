@@ -484,6 +484,7 @@ class NewRelicClient:
                   entities {
                     id
                     name
+                    yaml
                   }
                 }
               }
@@ -574,7 +575,7 @@ class NewRelicClient:
             name=response["workflow"]["name"],
         )
 
-    def ensure_policy_in_workflow(self, *, policy_id: str, workflow_id: str):
+    def ensure_policy_in_workflow(self, *, policy_id: str, workflow_id: str) -> None:
         """
         Ensure that a given workflow applies to a given policy ID.
         """
