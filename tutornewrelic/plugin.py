@@ -37,6 +37,7 @@ hooks.Filters.CONFIG_DEFAULTS.add_items(
         #   }
         # ]
         ("NEWRELIC_SYNTHETICS_MONITORS", []),
+        ("NEWRELIC_WORKFLOW_NAME", ""),
     ]
 )
 

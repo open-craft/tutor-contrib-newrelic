@@ -579,4 +579,94 @@ class NewRelicClient:
         """
         Ensure that a given workflow applies to a given policy ID.
         """
-        pass
+        get_query = """
+        query($accountId: Int!, $workflowId: ID!) {
+          actor {
+            account(id: $accountId) {
+              aiWorkflows {
+                workflows(filters: { id: $workflowId }) {
+                  entities {
+                    id
+                    issuesFilter {
+                      id
+                      predicates {
+                        attribute
+                        operator
+                        values
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        """
+
+        get_variables = {
+          "accountId": self.__account_id,
+          "workflowId": workflow_id,
+        } 
+
+        # First query to get the predicate
+        response = self.__send_request(get_query, get_variables)
+
+        workflows = response["actor"]["account"]["aiWorkflows"]["workflows"]
+        entities = workflows["entities"]
+
+        if not entities:
+            raise NerdGraphAPIError(f"Workflow {workflow_id!r} not found.")
+
+        issues_filter = entities[0]["issuesFilter"]
+        filter_id = issues_filter["id"]
+        predicates = issues_filter["predicates"]
+        policyIdsExists = False
+
+        # Search the predicate "policyIds"
+        for predicate in predicates:
+            if predicate["attribute"] == "labels.policyIds":
+                policyIdsExists = True
+                # Verify if the policy is already added
+                if policy_id in predicate["values"]:
+                    return
+                predicate["values"].append(policy_id)
+                break
+
+        if not policyIdsExists:
+          raise NerdGraphAPIError(f"Predicate 'policyIds' not found")
+        
+        update_query = """
+        mutation(
+          $accountId: Int!,
+          $workflowId: ID!,
+          $filterId: ID!,
+          $predicates: [AiWorkflowsPredicateInput!]!
+        ) {
+          aiWorkflowsUpdateWorkflow(
+            accountId: $accountId,
+            updateWorkflowData: {
+              id: $workflowId,
+              issuesFilter: {
+                id: $filterId,
+                predicates: $predicates
+              }
+            }
+          ) {
+            workflow { id name }
+            errors { description type }
+          }
+        }
+        """
+
+        update_variables = {
+          "accountId": self.__account_id,
+          "workflowId": workflow_id,
+          "filterId": filter_id,
+          "predicates": predicates,
+        }
+
+        response = self.__send_request(update_query, update_variables)
+
+        result = response["aiWorkflowsUpdateWorkflow"]
+        if result.get("errors"):
+            raise NerdGraphAPIError(f"Failed to update workflow: {result['errors']}")
