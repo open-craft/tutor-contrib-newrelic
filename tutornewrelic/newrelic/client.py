@@ -588,6 +588,7 @@ class NewRelicClient:
                     id
                     issuesFilter {
                       id
+                      type
                       predicates {
                         attribute
                         operator
@@ -618,6 +619,7 @@ class NewRelicClient:
 
         issues_filter = entities[0]["issuesFilter"]
         filter_id = issues_filter["id"]
+        filter_type = issues_filter["type"]
         predicates = issues_filter["predicates"]
         policyIdsExists = False
 
@@ -639,6 +641,7 @@ class NewRelicClient:
           $accountId: Int!,
           $workflowId: ID!,
           $filterId: ID!,
+          $filterType: AiWorkflowsFilterType!,
           $predicates: [AiWorkflowsPredicateInput!]!
         ) {
           aiWorkflowsUpdateWorkflow(
@@ -648,6 +651,7 @@ class NewRelicClient:
               issuesFilter: {
                 id: $filterId,
                 filterInput: {
+                  type: $filterType,
                   predicates: $predicates
                 }
               }
@@ -663,6 +667,7 @@ class NewRelicClient:
             "accountId": self.__account_id,
             "workflowId": workflow_id,
             "filterId": filter_id,
+            "filterType": filter_type,
             "predicates": predicates,
         }
 
