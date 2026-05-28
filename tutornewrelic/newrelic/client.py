@@ -647,7 +647,9 @@ class NewRelicClient:
               id: $workflowId,
               issuesFilter: {
                 id: $filterId,
-                predicates: $predicates
+                filterInput: {
+                  predicates: $predicates
+                }
               }
             }
           ) {
