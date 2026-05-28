@@ -484,7 +484,6 @@ class NewRelicClient:
                   entities {
                     id
                     name
-                    yaml
                   }
                 }
               }
