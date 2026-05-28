@@ -55,8 +55,12 @@ def create_alert_workflow(context: click.Context) -> None:
         if workflow_name := str(loaded_config.get("NEWRELIC_WORKFLOW_NAME", "")):
             workflow = client.get_ai_workflow(workflow_name)
             if workflow is None:
-                raise KeyError(f"Workflow {repr(workflow_name)} not found in this New Relic account.")
-            client.ensure_policy_in_workflow(policy_id=policy.id, workflow_id=workflow.id)
+                raise KeyError(
+                    f"Workflow {repr(workflow_name)} not found in this New Relic account."
+                )
+            client.ensure_policy_in_workflow(
+                policy_id=policy.id, workflow_id=workflow.id
+            )
 
         elif (client.get_ai_workflow(default_workflow_name(instance_name))) is None:
             client.create_ai_workflow(

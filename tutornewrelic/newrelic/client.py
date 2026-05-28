@@ -603,9 +603,9 @@ class NewRelicClient:
         """
 
         get_variables = {
-          "accountId": self.__account_id,
-          "workflowId": workflow_id,
-        } 
+            "accountId": self.__account_id,
+            "workflowId": workflow_id,
+        }
 
         # First query to get the predicate
         response = self.__send_request(get_query, get_variables)
@@ -632,8 +632,8 @@ class NewRelicClient:
                 break
 
         if not policyIdsExists:
-          raise NerdGraphAPIError(f"Predicate 'policyIds' not found")
-        
+            raise NerdGraphAPIError(f"Predicate 'policyIds' not found")
+
         update_query = """
         mutation(
           $accountId: Int!,
@@ -658,10 +658,10 @@ class NewRelicClient:
         """
 
         update_variables = {
-          "accountId": self.__account_id,
-          "workflowId": workflow_id,
-          "filterId": filter_id,
-          "predicates": predicates,
+            "accountId": self.__account_id,
+            "workflowId": workflow_id,
+            "filterId": filter_id,
+            "predicates": predicates,
         }
 
         response = self.__send_request(update_query, update_variables)
