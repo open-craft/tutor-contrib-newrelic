@@ -507,7 +507,7 @@ class NewRelicClient:
         return None
 
     def create_ai_workflow(
-        self, instance_name: str, policy_id: str, channel_id: str
+        self, instance_name: str, policy_id: str, channel_id: str, workflow_name: str
     ) -> Response:
         """
         Create an applied intelligence workflow and alert destination.
@@ -553,7 +553,7 @@ class NewRelicClient:
 
         variables = {
             "accountId": self.__account_id,
-            "name": f"Alert intelligence workflow of {instance_name} instance",
+            "name": workflow_name,
             "filterName": f"matching issues of {instance_name} instance",
             "policyIds": [policy_id],
             "channelId": channel_id,

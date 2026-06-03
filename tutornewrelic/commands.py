@@ -67,6 +67,7 @@ def create_alert_workflow(context: click.Context) -> None:
                 instance_name=instance_name,
                 policy_id=policy.id,
                 channel_id=channel.id,
+                workflow_name=default_workflow_name(instance_name),
             )
 
         for url in monitor_config["urls"]:  # type: ignore
