@@ -32,6 +32,10 @@ Add the following to the config:
           - https://instance.example.com/heartbeat?extended
           - https://studio.instance.example.com/heartbeat
           - https://mfe.instance.example.com
+    # Optional. By default this plugin will create a workflow for you.
+    # If specified, will add the created notification policy to this
+    # workflow rather than creating a new one.
+    NEWRELIC_WORKFLOW_NAME: My Workflow
 
 Enable the plugin and create monitoring policy:
 

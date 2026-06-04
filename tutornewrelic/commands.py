@@ -2,7 +2,7 @@ import click
 from tutor import config
 from tutor.commands.k8s import K8sContext
 
-from .newrelic import NewRelicClient
+from .newrelic import NewRelicClient, default_workflow_name
 
 
 @click.group(help="Commands for registering NewRelic alerts.")
@@ -52,11 +52,22 @@ def create_alert_workflow(context: click.Context) -> None:
                 destination_id=destination.id,
             )
 
-        if (workflow := client.get_ai_workflow(instance_name)) is None:
-            workflow = client.create_ai_workflow(
+        if workflow_name := str(loaded_config.get("NEWRELIC_WORKFLOW_NAME", "")):
+            workflow = client.get_ai_workflow(workflow_name)
+            if workflow is None:
+                raise KeyError(
+                    f"Workflow {repr(workflow_name)} not found in this New Relic account."
+                )
+            client.ensure_policy_in_workflow(
+                policy_id=policy.id, workflow_id=workflow.id
+            )
+
+        elif (client.get_ai_workflow(default_workflow_name(instance_name))) is None:
+            client.create_ai_workflow(
                 instance_name=instance_name,
                 policy_id=policy.id,
                 channel_id=channel.id,
+                workflow_name=default_workflow_name(instance_name),
             )
 
         for url in monitor_config["urls"]:  # type: ignore
